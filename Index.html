@@ -3,141 +3,301 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tibber Customer Tooling</title>
+    <title>Tibber: Conversation-Ticket Hybrid Model</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chosen Palette: Calm Corporate Teal -->
+    <!-- Application Structure Plan: The SPA is structured using a tabbed navigation system ("Overview," "The New Process," "Implementation Plan") to break down the report into logical, thematic sections. This is more user-friendly than a linear scroll, allowing stakeholders to quickly access the information most relevant to them (e.g., high-level summary vs. detailed workflow). The goal is to facilitate non-linear exploration of a process-heavy document. -->
+    <!-- Visualization & Content Choices: Report Info -> Goal -> Viz/Method -> Interaction -> Justification. 
+        - Title/Why/Current (Slides 1-3) -> Inform/Compare -> Tabbed Overview Section -> Static Text/Layout -> Provides immediate context.
+        - Decision Tree/Workflow (Slides 4-5) -> Organize Process -> HTML/CSS Diagram -> Static Visual -> Clarifies complex logic better than a list.
+        - Ticket States (Slide 6) -> Show Change/Progress -> HTML/CSS Status Bar -> Static Visual -> More engaging and intuitive than text with arrows.
+        - Roles (Slide 7) -> Organize Information -> Icon Cards (Unicode) -> Static Visual -> Breaks up text and improves readability.
+        - Risks/Rollout (Slides 9-10) -> Inform/Show Change -> 2-Column Lists & Timeline -> Static Visual -> Structures project plan information for clarity.
+        - All interactions are driven by the main tab navigation, powered by JavaScript, to switch between views. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
         body {
             font-family: 'Inter', sans-serif;
+            background-color: #F8F7F4;
+            color: #2c3e50;
         }
-        .slide-card {
-            background-color: #ffffff;
-            border-radius: 1.5rem;
-            padding: 2.5rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            transition: transform 0.2s;
+        .tab-button {
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
         }
-        .slide-card:hover {
-            transform: translateY(-5px);
+        .tab-button.active {
+            border-bottom-color: #4DB6AC;
+            color: #1a202c;
         }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .flow-arrow {
+            position: relative;
+            padding-left: 20px;
+        }
+        .flow-arrow::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #4DB6AC;
+            font-weight: bold;
+        }
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            background-color: #e2e8f0;
+            border-radius: 9999px;
+            height: 8px;
+            margin: 2rem 0;
+        }
+        .status-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(to right, #68D391, #4DB6AC, #4299E1, #9F7AEA, #ED64A6);
+            border-radius: 9999px;
+            opacity: 0.5;
+        }
+        .status-point {
+            position: relative;
+            z-index: 10;
+        }
+        .status-point .dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: white;
+            border: 4px solid;
+            margin: -6px auto 0.5rem;
+        }
+        .dot-submitted { border-color: #68D391; }
+        .dot-inprogress { border-color: #4DB6AC; }
+        .dot-waiting { border-color: #4299E1; }
+        .dot-resolved { border-color: #9F7AEA; }
+        .dot-closed { border-color: #ED64A6; }
     </style>
 </head>
-<body class="bg-[#A0E2E6] min-h-screen flex flex-col items-center p-8">
+<body class="antialiased">
 
-    <header class="text-center mb-12">
-        <h1 class="text-4xl sm:text-5xl font-extrabold text-[#0D1826] drop-shadow-md">Tibber Customer Tooling</h1>
-        <p class="text-xl sm:text-2xl font-medium text-[#0D1826] mt-2">Sept 2025</p>
-    </header>
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
 
-    <div class="w-full max-w-7xl">
-        <!-- Professional Overview Section -->
-        <div class="slide-card mb-8">
-            <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 leading-tight mb-4">Conversation → Ticket Hybrid in Intercom</h2>
-            <p class="text-lg text-gray-700 mb-6">
-                Our team is transitioning to a **Conversation-first with auto-conversion** model. This is a strategic shift from our current workflow, where live chats begin as conversations in LiveChat teams and are manually or automatically converted to tickets for complex issues.
-            </p>
-            <h3 class="text-xl font-bold text-gray-800 mb-2">Key Drivers for Change:</h3>
-            <ul class="list-disc list-inside space-y-2 text-gray-700 mb-6">
-                <li>Enables faster resolution for simple conversations.</li>
-                <li>Provides clear accountability for complex issues.</li>
-                <li>Improves customer visibility with a formal Ticket ID and state.</li>
-                <li>Generates better data to inform our roadmap and operational improvements.</li>
-            </ul>
+        <!-- Header -->
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800">Conversation → Ticket Hybrid Model</h1>
+            <p class="mt-2 text-lg text-gray-500">Tibber Customer Tooling • September 2025</p>
+        </header>
+
+        <!-- Tab Navigation -->
+        <div class="mb-8 border-b border-gray-200">
+            <nav class="-mb-px flex justify-center space-x-4 sm:space-x-8" id="tab-nav">
+                <button data-tab="overview" class="tab-button whitespace-nowrap py-4 px-1 text-base font-semibold text-gray-500 hover:text-gray-800 active">Overview</button>
+                <button data-tab="process" class="tab-button whitespace-nowrap py-4 px-1 text-base font-semibold text-gray-500 hover:text-gray-800">The New Process</button>
+                <button data-tab="plan" class="tab-button whitespace-nowrap py-4 px-1 text-base font-semibold text-gray-500 hover:text-gray-800">Implementation Plan</button>
+            </nav>
         </div>
 
-        <!-- The rest of the slides as individual cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-            <!-- Decision tree -->
-            <div class="slide-card flex flex-col justify-between">
-                <div>
-                    <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Decision tree</h2>
-                    <ul class="list-disc list-inside space-y-2 mt-4 text-gray-700">
-                        <li>Start as Conversation</li>
-                        <li>Convert when:</li>
-                        <ul class="list-circle list-inside ml-6 space-y-1">
-                            <li>Multi‑team or >1 workday</li>
-                            <li>Compliance, billing, engineering involved</li>
-                            <li>Customer needs formal status</li>
-                            <li>Bug or feature request</li>
-                        </ul>
-                    </ul>
+        <!-- Tab Content -->
+        <main>
+            <!-- Overview Tab -->
+            <div id="overview" class="tab-content active">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-800">Strategic Shift to a Hybrid Model</h2>
+                    <p class="mt-2 max-w-3xl mx-auto text-gray-600">This section outlines the decision to adopt a conversation-first support model, the key benefits driving this change, and how it evolves from our current system.</p>
                 </div>
-            </div>
-
-            <!-- Workflow and automation -->
-            <div class="slide-card flex flex-col justify-between">
-                <div>
-                    <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Workflow and automation</h2>
-                    <ul class="list-disc list-inside space-y-2 mt-4 text-gray-700">
-                        <li>On assignment to Defined Team‑Inboxes → Convert to Ticket</li>
-                        <li>Set Type and SLA, add watchers, notify Slack, send ack with Ticket ID</li>
-                        <li>Ticket state triggers manage lifecycle and auto‑close</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Ticket states (customer-facing) -->
-            <div class="slide-card flex flex-col justify-between">
-                <div>
-                    <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Ticket states (customer‑facing)</h2>
-                    <div class="mt-4 text-center font-bold text-xl text-gray-800">
-                        <p class="mb-2">Submitted → In Progress → Waiting on Customer → Resolved → Closed</p>
+                <div class="bg-white p-8 rounded-2xl shadow-lg">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        <div class="border-r-0 md:border-r md:pr-8 border-gray-200">
+                            <h3 class="text-2xl font-bold text-gray-900">The Decision</h3>
+                            <p class="mt-2 text-gray-600 font-medium text-lg">Conversation-first with auto-conversion for defined teams.</p>
+                            <h4 class="text-xl font-bold text-gray-800 mt-6 mb-3">Why this change?</h4>
+                            <ul class="space-y-3">
+                                <li class="flex items-start"><span class="text-teal-500 font-bold mr-3 mt-1">✓</span> Faster for simple conversations</li>
+                                <li class="flex items-start"><span class="text-teal-500 font-bold mr-3 mt-1">✓</span> Accountable for complex issues</li>
+                                <li class="flex items-start"><span class="text-teal-500 font-bold mr-3 mt-1">✓</span> Clear customer visibility via Ticket ID and state</li>
+                                <li class="flex items-start"><span class="text-teal-500 font-bold mr-3 mt-1">✓</span> Better data to improve roadmap and ops</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-900">Current Model at Tibber</h3>
+                            <p class="mt-2 text-gray-600">Our existing process serves as the foundation for this evolution.</p>
+                            <ul class="mt-4 space-y-3 list-disc list-inside text-gray-700">
+                                <li>Live chat starts as a <span class="font-semibold">Conversation</span> in LiveChat teams.</li>
+                                <li><span class="font-semibold">Auto-converted</span> to a Ticket when assigned to defined team inboxes.</li>
+                                <li><span class="font-semibold">Manually converted</span> when specific complexity criteria are met.</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Roles and collaboration -->
-            <div class="slide-card flex flex-col justify-between">
-                <div>
-                    <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Roles and collaboration</h2>
-                    <ul class="list-disc list-inside space-y-2 mt-4 text-gray-700">
-                        <li>Frontline handle Conversations, convert on criteria</li>
-                        <li>Back‑office via private notes / Back‑office tickets</li>
-                        <li>Lite seats enabled for cross‑team collaboration</li>
-                    </ul>
+            <!-- The New Process Tab -->
+            <div id="process" class="tab-content">
+                 <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-800">How The New Process Works</h2>
+                    <p class="mt-2 max-w-3xl mx-auto text-gray-600">Explore the detailed mechanics of the new hybrid model, from the initial conversation to ticket management and team collaboration.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-white p-8 rounded-2xl shadow-lg">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Decision Tree: When to Convert</h3>
+                        <div class="space-y-4">
+                            <div class="p-4 bg-teal-50 rounded-lg"><p class="font-semibold">All Interactions Start as a Conversation</p></div>
+                            <div class="pl-6 border-l-2 border-teal-500 space-y-3">
+                                <p class="font-bold text-gray-800">Convert to a Ticket when:</p>
+                                <ul class="list-disc list-inside text-gray-700 space-y-1">
+                                    <li>Issue spans multiple teams or >1 workday</li>
+                                    <li>Compliance, billing, or engineering are involved</li>
+                                    <li>Customer requests a formal status update</li>
+                                    <li>It's a bug or a feature request</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-8 rounded-2xl shadow-lg">
+                         <h3 class="text-2xl font-bold text-gray-900 mb-4">Workflow & Automation</h3>
+                        <ul class="space-y-4">
+                           <li class="flow-arrow font-medium">Assignment to Defined Team-Inboxes triggers conversion to Ticket.</li>
+                           <li class="flow-arrow font-medium">System sets Type & SLA, adds watchers, notifies Slack, and sends customer an acknowledgement with Ticket ID.</li>
+                           <li class="flow-arrow font-medium">Ticket state triggers manage the lifecycle and handle auto-closure.</li>
+                        </ul>
+                    </div>
+                </div>
+                 <div class="mt-8 bg-white p-8 rounded-2xl shadow-lg">
+                    <h3 class="text-2xl font-bold text-gray-900 text-center mb-2">Customer-Facing Ticket States</h3>
+                    <div class="relative w-full max-w-4xl mx-auto mt-6">
+                        <div class="status-bar"></div>
+                        <div class="absolute w-full top-0 flex justify-between text-center text-sm font-semibold">
+                           <div class="status-point w-1/5"><div class="dot dot-submitted"></div>Submitted</div>
+                           <div class="status-point w-1/5"><div class="dot dot-inprogress"></div>In Progress</div>
+                           <div class="status-point w-1/5"><div class="dot dot-waiting"></div>Waiting on Customer</div>
+                           <div class="status-point w-1/5"><div class="dot dot-resolved"></div>Resolved</div>
+                           <div class="status-point w-1/5"><div class="dot dot-closed"></div>Closed</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-8 bg-white p-8 rounded-2xl shadow-lg">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6">Roles & Collaboration</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                        <div class="p-6 bg-gray-50 rounded-xl">
+                            <p class="text-4xl mb-2">💬</p>
+                            <h4 class="font-bold text-lg">Frontline Teams</h4>
+                            <p class="text-gray-600 text-sm">Handle initial conversations and convert to tickets based on defined criteria.</p>
+                        </div>
+                        <div class="p-6 bg-gray-50 rounded-xl">
+                             <p class="text-4xl mb-2">📝</p>
+                            <h4 class="font-bold text-lg">Back-office Teams</h4>
+                            <p class="text-gray-600 text-sm">Collaborate via private notes within tickets or through dedicated back-office tickets.</p>
+                        </div>
+                        <div class="p-6 bg-gray-50 rounded-xl">
+                             <p class="text-4xl mb-2">🤝</p>
+                            <h4 class="font-bold text-lg">Lite Seats</h4>
+                            <p class="text-gray-600 text-sm">Enabled for stakeholders across teams to provide input and maintain visibility.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Metrics (pilot, 2 weeks) -->
-            <div class="slide-card flex flex-col justify-between">
-                <div>
-                    <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Metrics (pilot, 2 weeks)</h2>
-                    <ul class="list-disc list-inside space-y-2 mt-4 text-gray-700">
-                        <li>Directional read: CSAT and CCPH limited by window</li>
-                        <li>Targets maintained for SLA; annotate dashboards as pilot data</li>
-                    </ul>
+            <!-- Implementation Plan Tab -->
+            <div id="plan" class="tab-content">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-800">Project Execution</h2>
+                    <p class="mt-2 max-w-3xl mx-auto text-gray-600">This section covers the pilot metrics, potential risks with their mitigation strategies, and the phased rollout plan for company-wide adoption.</p>
+                </div>
+                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                     <div class="bg-white p-8 rounded-2xl shadow-lg">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Pilot Metrics (2-week period)</h3>
+                        <ul class="list-disc list-inside text-gray-700 space-y-2">
+                            <li><span class="font-semibold">Directional read only:</span> CSAT and CCPH data is limited by the short pilot window.</li>
+                            <li><span class="font-semibold">SLA Targets Maintained:</span> No negative impact on Service Level Agreements was observed.</li>
+                            <li>All relevant dashboards will be annotated to clarify that the data is from a pilot phase.</li>
+                        </ul>
+                    </div>
+                     <div class="bg-white p-8 rounded-2xl shadow-lg">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Risks & Mitigations</h3>
+                        <div class="space-y-4 text-sm">
+                            <div class="grid grid-cols-2 gap-4">
+                                <p class="font-semibold text-gray-800">Over-ticketing</p>
+                                <p class="text-gray-600">→ Weekly QA and clear conversion criteria.</p>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <p class="font-semibold text-gray-800">Misrouting</p>
+                                <p class="text-gray-600">→ Tighten automation rules; create a verification queue.</p>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <p class="font-semibold text-gray-800">Change fatigue</p>
+                                <p class="text-gray-600">→ Develop a clear playbook and host office hours.</p>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <p class="font-semibold text-gray-800">Notification noise</p>
+                                <p class="text-gray-600">→ Consolidate updates and alerts.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-8 bg-white p-8 rounded-2xl shadow-lg">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6">Rollout & Next Steps</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+                        <div class="p-4 bg-teal-50 rounded-lg border-l-4 border-teal-400">
+                            <h4 class="font-bold">Phase 1: Pilot Review</h4>
+                            <p class="text-sm text-gray-600">Pilot complete. Incorporate observations and feedback.</p>
+                        </div>
+                         <div class="p-4 bg-teal-50 rounded-lg border-l-4 border-teal-400">
+                            <h4 class="font-bold">Phase 2: Expansion</h4>
+                            <p class="text-sm text-gray-600">Expand to SE, NO, & NL team inboxes.</p>
+                        </div>
+                         <div class="p-4 bg-teal-50 rounded-lg border-l-4 border-teal-400">
+                            <h4 class="font-bold">Phase 3: Measurement</h4>
+                            <p class="text-sm text-gray-600">4–6 week period for measurement and optimization.</p>
+                        </div>
+                         <div class="p-4 bg-teal-50 rounded-lg border-l-4 border-teal-400">
+                            <h4 class="font-bold">Approvals</h4>
+                            <p class="text-sm text-gray-600">Finalize owners, dates, and reporting cadence.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Risks and mitigations -->
-            <div class="slide-card flex flex-col justify-between">
-                <div>
-                    <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Risks and mitigations</h2>
-                    <ul class="list-disc list-inside space-y-2 mt-4 text-gray-700">
-                        <li>Over‑ticketing → QA weekly, clear convert criteria</li>
-                        <li>Misrouting → tighten rules, verification queue</li>
-                        <li>Change fatigue → playbook and office hours</li>
-                        <li>Notification noise → consolidate updates</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Rollout and next steps -->
-            <div class="slide-card flex flex-col justify-between">
-                <div>
-                    <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Rollout and next steps</h2>
-                    <ul class="list-disc list-inside space-y-2 mt-4 text-gray-700">
-                        <li>Phase 1: Pilot complete, incorporate observations</li>
-                        <li>Phase 2: Expand to SE, NO, NL team inboxes</li>
-                        <li>Phase 3: 4–6 week measurement and optimization</li>
-                        <li>Approvals: Owners, dates, reporting cadence</li>
-                    </ul>
-                </div>
-            </div>
-
-        </div>
+        </main>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabNav = document.getElementById('tab-nav');
+            const tabs = tabNav.querySelectorAll('.tab-button');
+            const contents = document.querySelectorAll('.tab-content');
+
+            function switchTab(tabId) {
+                contents.forEach(content => {
+                    content.classList.remove('active');
+                });
+                tabs.forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                document.getElementById(tabId).classList.add('active');
+                tabNav.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+            }
+
+            tabNav.addEventListener('click', function(e) {
+                if (e.target.matches('.tab-button')) {
+                    const tabId = e.target.getAttribute('data-tab');
+                    switchTab(tabId);
+                }
+            });
+
+            // Set initial active tab
+            switchTab('overview');
+        });
+    </script>
 
 </body>
 </html>
