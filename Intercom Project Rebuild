@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tibber Customer Tooling</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .slide-card {
+            background-color: #ffffff;
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s;
+        }
+        .slide-card:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body class="bg-[#A0E2E6] min-h-screen flex flex-col items-center p-8">
+
+    <header class="text-center mb-12">
+        <h1 class="text-4xl sm:text-5xl font-extrabold text-[#0D1826] drop-shadow-md">Tibber Customer Tooling</h1>
+        <p class="text-xl sm:text-2xl font-medium text-[#0D1826] mt-2">Sept 2025</p>
+    </header>
+
+    <div class="w-full max-w-7xl">
+        <!-- Professional Overview Section -->
+        <div class="slide-card mb-8">
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 leading-tight mb-4">Conversation → Ticket Hybrid in Intercom</h2>
+            <p class="text-lg text-gray-700 mb-6">
+                Our team is transitioning to a **Conversation-first with auto-conversion** model. This is a strategic shift from our current workflow, where live chats begin as conversations in LiveChat teams and are manually or automatically converted to tickets for complex issues.
+            </p>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Key Drivers for Change:</h3>
+            <ul class="list-disc list-inside space-y-2 text-gray-700 mb-6">
+                <li>Enables faster resolution for simple conversations.</li>
+                <li>Provides clear accountability for complex issues.</li>
+                <li>Improves customer visibility with a formal Ticket ID and state.</li>
+                <li>Generates better data to inform our roadmap and operational improvements.</li>
+            </ul>
+        </div>
+
+        <!-- The rest of the slides as individual cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+            <!-- Decision tree -->
+            <div class="slide-card flex flex-col justify-between">
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Decision tree</h2>
+                    <ul class="list-disc list-inside space-y-2 mt-4 text-gray-700">
+                        <li>Start as Conversation</li>
+                        <li>Convert when:</li>
+                        <ul class="list-circle list-inside ml-6 space-y-1">
+                            <li>Multi‑team or >1 workday</li>
+                            <li>Compliance, billing, engineering involved</li>
+                            <li>Customer needs formal status</li>
+                            <li>Bug or feature request</li>
+                        </ul>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Workflow and automation -->
+            <div class="slide-card flex flex-col justify-between">
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Workflow and automation</h2>
+                    <ul class="list-disc list-inside space-y-2 mt-4 text-gray-700">
+                        <li>On assignment to Defined Team‑Inboxes → Convert to Ticket</li>
+                        <li>Set Type and SLA, add watchers, notify Slack, send ack with Ticket ID</li>
+                        <li>Ticket state triggers manage lifecycle and auto‑close</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Ticket states (customer-facing) -->
+            <div class="slide-card flex flex-col justify-between">
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Ticket states (customer‑facing)</h2>
+                    <div class="mt-4 text-center font-bold text-xl text-gray-800">
+                        <p class="mb-2">Submitted → In Progress → Waiting on Customer → Resolved → Closed</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Roles and collaboration -->
+            <div class="slide-card flex flex-col justify-between">
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Roles and collaboration</h2>
+                    <ul class="list-disc list-inside space-y-2 mt-4 text-gray-700">
+                        <li>Frontline handle Conversations, convert on criteria</li>
+                        <li>Back‑office via private notes / Back‑office tickets</li>
+                        <li>Lite seats enabled for cross‑team collaboration</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Metrics (pilot, 2 weeks) -->
+            <div class="slide-card flex flex-col justify-between">
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Metrics (pilot, 2 weeks)</h2>
+                    <ul class="list-disc list-inside space-y-2 mt-4 text-gray-700">
+                        <li>Directional read: CSAT and CCPH limited by window</li>
+                        <li>Targets maintained for SLA; annotate dashboards as pilot data</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Risks and mitigations -->
+            <div class="slide-card flex flex-col justify-between">
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Risks and mitigations</h2>
+                    <ul class="list-disc list-inside space-y-2 mt-4 text-gray-700">
+                        <li>Over‑ticketing → QA weekly, clear convert criteria</li>
+                        <li>Misrouting → tighten rules, verification queue</li>
+                        <li>Change fatigue → playbook and office hours</li>
+                        <li>Notification noise → consolidate updates</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Rollout and next steps -->
+            <div class="slide-card flex flex-col justify-between">
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Rollout and next steps</h2>
+                    <ul class="list-disc list-inside space-y-2 mt-4 text-gray-700">
+                        <li>Phase 1: Pilot complete, incorporate observations</li>
+                        <li>Phase 2: Expand to SE, NO, NL team inboxes</li>
+                        <li>Phase 3: 4–6 week measurement and optimization</li>
+                        <li>Approvals: Owners, dates, reporting cadence</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
